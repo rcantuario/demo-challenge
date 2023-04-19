@@ -1,9 +1,9 @@
 package com.example.demo.model;
 
 
-import lombok.Data;
+import jakarta.persistence.*;
 
-import javax.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDate;
 @Data
