@@ -1,10 +1,12 @@
 package com.example.demo.model;
 
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 import java.time.LocalDate;
-
+@Data
 @Entity
 public class Transaction {
     @Id
@@ -16,6 +18,9 @@ public class Transaction {
     private String currency;
     private LocalDate date;
     private Double amount;
+
+    @OneToOne
+    private TransactionInfo transactionInfo;
 
 
 

@@ -11,5 +11,7 @@ public class TransactionInfo {
     private double amountSent;
     private double amountReceived;
     private double fee;
+    @OneToOne
+    private Transaction transaction;
 
 }
