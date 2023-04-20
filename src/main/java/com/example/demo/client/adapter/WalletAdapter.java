@@ -1,16 +1,18 @@
 package com.example.demo.client.adapter;
 
 import com.example.demo.client.dto.Balance;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
 public class WalletAdapter {
+    @Value("${services.wallet.balance.url}")
+    private String balanceUrl;
 
     public Balance getBalance(){
         RestTemplate restTemplate = new RestTemplate();
-        String fooResourceUrl  = "http://mockoon.tools.getontop.com:3000/wallets/balance?user_id=1000";
-        Balance response = restTemplate.getForObject(fooResourceUrl, Balance.class);
+        Balance response = restTemplate.getForObject(balanceUrl, Balance.class);
 
         System.out.println(response);
 

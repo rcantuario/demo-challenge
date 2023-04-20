@@ -2,19 +2,18 @@ package com.example.demo.model;
 
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Data
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class BankAccount {
 
     @Id
     private Integer id;
-
     private String firstName;
     private String lastName;
     private String routingNumber;
