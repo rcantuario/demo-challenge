@@ -6,15 +6,20 @@ import com.example.demo.client.dto.Balance;
 import com.example.demo.client.dto.Payment;
 import com.example.demo.client.dto.payment.*;
 import com.example.demo.client.dto.payment.response.PaymentResponse;
+import com.example.demo.exception.InvalidBalanceException;
 import com.example.demo.model.BankAccount;
 import com.example.demo.model.Transaction;
 import com.example.demo.model.Transaction_Status;
 import com.example.demo.model.Wallet;
 import com.example.demo.repository.BankAccountRepository;
+import com.example.demo.repository.TransactionRepository;
 import com.example.demo.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.example.demo.repository.TransactionRepository;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,18 +36,11 @@ public class TransactionService {
     private final WalletRepository walletRepository;
 
     public PaymentResponse pay(Payment payment){
-        Transaction t = new Transaction();
-        t.setCurrency(payment.getCurrency());
-        t.setAmount(payment.getAmount());
-        t.setDate(LocalDate.now());
-        t.setStatus(Transaction_Status.IN_PROGRESS.getDescription());
-
-//        Optional<Wallet> wallet = walletRepository.findById(payment.getWalletId());
-
+        Transaction t = getTransaction(payment);
         Balance balance = walletAdapter.getBalance();
 
         if(t.getAmount() > balance.getAmount()){
-            throw new IllegalArgumentException("invalid amount");
+            throw new InvalidBalanceException("Invalid balance for account");
         } else {
             transactionRepository.save(t);
 
@@ -50,6 +48,14 @@ public class TransactionService {
             return paymentsAdapter.createPayment(paymentDto);
 
         }
+    }
+    private static Transaction getTransaction(Payment payment) {
+        Transaction t = new Transaction();
+        t.setCurrency(payment.getCurrency());
+        t.setAmount(payment.getAmount());
+        t.setDate(LocalDate.now());
+        t.setStatus(Transaction_Status.IN_PROGRESS.getDescription());
+        return t;
     }
 
     private ExternalPaymentDto createPayment(Payment payment) {

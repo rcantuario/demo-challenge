@@ -2,11 +2,14 @@ package com.example.demo.controller;
 
 import com.example.demo.client.dto.Payment;
 import com.example.demo.client.dto.payment.response.PaymentResponse;
+import com.example.demo.exception.InvalidBalanceException;
 import com.example.demo.model.Transaction;
 import com.example.demo.service.PaymentService;
 import com.example.demo.service.TransactionService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -30,7 +33,16 @@ public class DemoController {
     public PaymentResponse pay(@RequestBody Payment payment){
 
         return transactionService.pay(payment);
+    }
 
+    @ExceptionHandler(InvalidBalanceException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleInvalidBalanceException(
+            InvalidBalanceException exception
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_ACCEPTABLE)
+                .body(exception.getMessage());
     }
 
     @GetMapping
