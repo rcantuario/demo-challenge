@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class BalanceHandler implements PaymentHandler{
     private final WalletAdapter walletAdapter;
     private  PaymentHandler next;
-    private final TransactionRepository transactionRepository;
+    private  TransactionRepository transactionRepository;
 
     @Override
     public void setNext(PaymentHandler next) {

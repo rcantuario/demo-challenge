@@ -20,7 +20,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final PaymentHandlerFactory handlerFactory;
 
-    public PaymentResponse pay(Payment payment){
+    public PaymentResponse createTransaction(Payment payment){
         PaymentHandler handler = handlerFactory.getHandler();
         PaymentMessage message = new PaymentMessage();
         message.setPayment(payment);

@@ -25,7 +25,7 @@ public class DemoController {
     public PaymentResponse createTransaction(@RequestBody Payment payment){
 
         try{
-            return transactionService.pay(payment);
+            return transactionService.createTransaction(payment);
         } catch(Exception e){
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         }
@@ -34,5 +34,10 @@ public class DemoController {
     @GetMapping
     public List<Transaction> listTransactions(@RequestParam Double amount, @RequestParam LocalDate date){
         return transactionService.getTransactions(amount, date);
+    }
+
+    @RequestMapping("/ping")
+    public @ResponseBody String greeting() {
+        return "Hello, World";
     }
 }
