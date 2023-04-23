@@ -1,12 +1,18 @@
 package com.example.demo.service;
 
+import com.example.demo.chain.PaymentHandler;
+import com.example.demo.chain.PaymentHandlerFactory;
+import com.example.demo.chain.PaymentMessage;
 import com.example.demo.client.adapter.PaymentsAdapter;
 import com.example.demo.client.adapter.WalletAdapter;
 import com.example.demo.client.dto.Balance;
 import com.example.demo.client.dto.Payment;
-import com.example.demo.client.dto.payment.*;
+import com.example.demo.client.dto.builder.ExternalPaymentBuilder;
+import com.example.demo.client.dto.payment.ExternalPaymentDto;
 import com.example.demo.client.dto.payment.response.PaymentResponse;
+import com.example.demo.exception.AccountNotFoundException;
 import com.example.demo.exception.InvalidBalanceException;
+import com.example.demo.exception.WalletNotFoundException;
 import com.example.demo.model.BankAccount;
 import com.example.demo.model.Transaction;
 import com.example.demo.model.Transaction_Status;
@@ -15,11 +21,7 @@ import com.example.demo.repository.BankAccountRepository;
 import com.example.demo.repository.TransactionRepository;
 import com.example.demo.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,62 +36,19 @@ public class TransactionService {
     private final BankAccountRepository bankAccountRepository;
     private final PaymentsAdapter paymentsAdapter;
     private final WalletRepository walletRepository;
+    private final ExternalPaymentBuilder externalPaymentBuilder;
+    private final PaymentHandlerFactory handlerFactory;
 
     public PaymentResponse pay(Payment payment){
-        Transaction t = getTransaction(payment);
-        Balance balance = walletAdapter.getBalance();
+        PaymentHandler handler = handlerFactory.getHandler();
+        PaymentMessage message = new PaymentMessage();
+        message.setPayment(payment);
 
-        if(t.getAmount() > balance.getAmount()){
-            throw new InvalidBalanceException("Invalid balance for account");
-        } else {
-            transactionRepository.save(t);
+        handler.handle(message);
 
-            ExternalPaymentDto paymentDto = createPayment(payment);
-            return paymentsAdapter.createPayment(paymentDto);
+        return message.getPaymentResponse();
 
-        }
-    }
-    private static Transaction getTransaction(Payment payment) {
-        Transaction t = new Transaction();
-        t.setCurrency(payment.getCurrency());
-        t.setAmount(payment.getAmount());
-        t.setDate(LocalDate.now());
-        t.setStatus(Transaction_Status.IN_PROGRESS.getDescription());
-        return t;
-    }
 
-    private ExternalPaymentDto createPayment(Payment payment) {
-        Optional<BankAccount> bankAccount = bankAccountRepository.findById(payment.getAccountId());
-        Optional<Wallet> wallet = walletRepository.findById(payment.getWalletId());
-
-        SourceInformation sourceInformation = SourceInformation.builder()
-                .name("ONTOP INC")
-                .build();
-
-        Account account = Account.builder().accountNumber(bankAccount.get().getAccountNumber())
-                .routingNumber(bankAccount.get().getRoutingNumber())
-                .currency(payment.getCurrency())
-                .build();
-
-        Account accountSource = Account.builder().accountNumber(wallet.get().getAccountNumber())
-                .routingNumber(wallet.get().getRoutingNumber())
-                .currency(payment.getCurrency())
-                .build();
-
-        Source source = Source.builder().account(accountSource)
-                .sourceInformation(sourceInformation)
-                .type("COMPANY")
-                .build();
-
-        //TODO Replace by the correct account
-        Destination destination = Destination.builder()
-                .name(bankAccount.get().getFirstName() + bankAccount.get().getLastName())
-                .account(account).build();
-
-        return ExternalPaymentDto.builder().source(source)
-                .amount(payment.getAmount())
-                .destination(destination)
-                .build();
     }
 
     public List<Transaction> getTransactions(double amount, LocalDate date){
