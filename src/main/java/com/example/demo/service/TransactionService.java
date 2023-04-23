@@ -5,6 +5,7 @@ import com.example.demo.client.adapter.WalletAdapter;
 import com.example.demo.client.dto.Balance;
 import com.example.demo.client.dto.Payment;
 import com.example.demo.client.dto.payment.*;
+import com.example.demo.client.dto.payment.response.PaymentResponse;
 import com.example.demo.model.BankAccount;
 import com.example.demo.model.Transaction;
 import com.example.demo.model.Transaction_Status;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.repository.TransactionRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,7 +30,7 @@ public class TransactionService {
     private final PaymentsAdapter paymentsAdapter;
     private final WalletRepository walletRepository;
 
-    public void pay(Payment payment){
+    public PaymentResponse pay(Payment payment){
         Transaction t = new Transaction();
         t.setCurrency(payment.getCurrency());
         t.setAmount(payment.getAmount());
@@ -45,7 +47,7 @@ public class TransactionService {
             transactionRepository.save(t);
 
             ExternalPaymentDto paymentDto = createPayment(payment);
-            paymentsAdapter.createPayment(paymentDto);
+            return paymentsAdapter.createPayment(paymentDto);
 
         }
     }
@@ -82,5 +84,9 @@ public class TransactionService {
                 .amount(payment.getAmount())
                 .destination(destination)
                 .build();
+    }
+
+    public List<Transaction> getTransactions(double amount, LocalDate date){
+        return transactionRepository.findByAmountAndDateOrderByDateDesc(amount, date);
     }
 }
