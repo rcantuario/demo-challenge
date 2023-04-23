@@ -32,11 +32,11 @@ public class PaymentsAdapter {
 
         HttpEntity<String> request = new HttpEntity<>(json,headers);
 
-        ResponseEntity<String> response = restTemplate.
-                postForEntity(URI.create(paymentUrl), request, String.class);
+        ResponseEntity<PaymentResponse> response = restTemplate.
+                postForEntity(URI.create(paymentUrl), request, PaymentResponse.class);
 
         System.out.println(response);
 
-        return null;
+        return response.getBody();
     }
 }
