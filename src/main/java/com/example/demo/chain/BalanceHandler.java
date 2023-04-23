@@ -4,7 +4,6 @@ import com.example.demo.client.adapter.WalletAdapter;
 import com.example.demo.client.dto.Balance;
 import com.example.demo.exception.InvalidBalanceException;
 import com.example.demo.repository.TransactionRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 @Component

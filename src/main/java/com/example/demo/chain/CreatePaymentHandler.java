@@ -11,7 +11,6 @@ import com.example.demo.model.BankAccount;
 import com.example.demo.model.Wallet;
 import com.example.demo.repository.BankAccountRepository;
 import com.example.demo.repository.WalletRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
