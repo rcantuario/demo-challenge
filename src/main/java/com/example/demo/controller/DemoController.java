@@ -1,16 +1,19 @@
 package com.example.demo.controller;
 
 import com.example.demo.client.dto.Payment;
+import com.example.demo.client.dto.payment.response.PaymentResponse;
+import com.example.demo.model.Transaction;
 import com.example.demo.service.PaymentService;
 import com.example.demo.service.TransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
+@RequestMapping("/api/payments")
 @AllArgsConstructor
 public class DemoController {
     private final PaymentService paymentService;
@@ -23,11 +26,15 @@ public class DemoController {
         return "Renan";
 
     }
-    @PostMapping(value = "/pay", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String pay(@RequestBody Payment payment){
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public PaymentResponse pay(@RequestBody Payment payment){
 
-        transactionService.pay(payment);
+        return transactionService.pay(payment);
 
-        return "Gremio";
+    }
+
+    @GetMapping
+    public List<Transaction> listTransactions(@RequestParam Double amount, @RequestParam LocalDate date){
+        return transactionService.getTransactions(amount, date);
     }
 }
