@@ -8,11 +8,13 @@ import org.springframework.stereotype.Component;
 public class PaymentHandlerFactory {
     private final TransactionHandler transactionHandler;
     private final BalanceHandler balanceHandler;
+    private final WalletHandler walletHandler;
     private final CreatePaymentHandler createPaymentHandler;
 
     public PaymentHandler getHandler(){
         transactionHandler.setNext(balanceHandler);
-        balanceHandler.setNext(createPaymentHandler);
+        balanceHandler.setNext(walletHandler);
+        walletHandler.setNext(createPaymentHandler);
 
         return transactionHandler;
     }

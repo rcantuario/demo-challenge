@@ -17,7 +17,10 @@ public class TransactionHandler implements PaymentHandler{
 
     @Override
     public void handle(PaymentMessage message) {
+        Transaction transaction = createTransactionForPayment(message.getPayment());
         message.setTransaction(createTransactionForPayment(message.getPayment()));
+        message.getPayment().setAmount(transaction.getAmountSent());
+
         next.handle(message);
     }
 
@@ -27,6 +30,8 @@ public class TransactionHandler implements PaymentHandler{
         t.setAmount(payment.getAmount());
         t.setDate(LocalDate.now());
         t.setStatus(Transaction_Status.IN_PROGRESS.getDescription());
+        t.setFee(t.getAmount() * 0.1);
+        t.setAmountSent(t.getAmount() - t.getFee());
         return t;
     }
 }

@@ -22,10 +22,7 @@ public class Transaction {
     private String currency;
     private LocalDate date;
     private Double amount;
-
-    @OneToOne
-    private TransactionInfo transactionInfo;
-
-
+    private Double amountSent;
+    private Double fee;
 
 }
