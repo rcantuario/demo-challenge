@@ -36,6 +36,8 @@ public class CreatePaymentHandler implements PaymentHandler{
             ExternalPaymentDto paymentDto = createPaymentDto(message.getPayment());
             PaymentResponse paymentResponse = paymentsAdapter.createPayment(paymentDto);
             message.setPaymentResponse(paymentResponse);
+
+            next.handle(message);
     }
 
     private ExternalPaymentDto createPaymentDto(Payment payment) {

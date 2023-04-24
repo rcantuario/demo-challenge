@@ -21,7 +21,7 @@ public class WalletAdapter {
     @Value("${services.wallet.transactions.url}")
     private String walletUrl;
 
-    public WalletTransactionResponse createWalletTransaction(WalletTransaction walletTransaction){
+    public ResponseEntity<WalletTransactionResponse> createWalletTransaction(WalletTransaction walletTransaction){
         RestTemplate restTemplate = new RestTemplate();
 
         System.out.println(walletTransaction);
@@ -39,6 +39,6 @@ public class WalletAdapter {
 
         System.out.println(response.getBody());
 
-        return response.getBody();
+        return response;
     }
 }

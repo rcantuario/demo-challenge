@@ -10,11 +10,13 @@ public class PaymentHandlerFactory {
     private final BalanceHandler balanceHandler;
     private final WalletHandler walletHandler;
     private final CreatePaymentHandler createPaymentHandler;
+    private final UpdateTransactionHandler updateTransactionHandler;
 
     public PaymentHandler getHandler(){
         transactionHandler.setNext(balanceHandler);
         balanceHandler.setNext(walletHandler);
         walletHandler.setNext(createPaymentHandler);
+        createPaymentHandler.setNext(updateTransactionHandler);
 
         return transactionHandler;
     }

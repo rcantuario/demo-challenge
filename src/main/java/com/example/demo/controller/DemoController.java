@@ -25,7 +25,8 @@ public class DemoController {
     public PaymentResponse createTransaction(@RequestBody Payment payment){
 
         try{
-            return transactionService.createTransaction(payment);
+            PaymentResponse transaction = transactionService.createTransaction(payment);
+            return transaction;
         } catch(Exception e){
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         }
