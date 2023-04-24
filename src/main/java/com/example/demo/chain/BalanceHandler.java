@@ -1,6 +1,6 @@
 package com.example.demo.chain;
 
-import com.example.demo.client.adapter.WalletAdapter;
+import com.example.demo.client.adapter.BalanceAdapter;
 import com.example.demo.client.dto.Balance;
 import com.example.demo.exception.InvalidBalanceException;
 import com.example.demo.repository.TransactionRepository;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class BalanceHandler implements PaymentHandler{
-    private final WalletAdapter walletAdapter;
+    private final BalanceAdapter balanceAdapter;
     private  PaymentHandler next;
-    private  TransactionRepository transactionRepository;
+    private  final TransactionRepository transactionRepository;
 
     @Override
     public void setNext(PaymentHandler next) {
@@ -20,8 +20,8 @@ public class BalanceHandler implements PaymentHandler{
 
     @Override
     public void handle(PaymentMessage message) {
-        Balance balance = walletAdapter.getBalance();
-        if(message.getTransaction().getAmount() > balance.getAmount()) {
+        Balance balance = balanceAdapter.getBalance();
+        if(message.getTransaction().getAmountSent() >= balance.getAmount()) {
             throw new InvalidBalanceException("Invalid balance for account");
         } else {
             transactionRepository.save(message.getTransaction());

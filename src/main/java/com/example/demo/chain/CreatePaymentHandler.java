@@ -33,13 +33,12 @@ public class CreatePaymentHandler implements PaymentHandler{
 
     @Override
     public void handle(PaymentMessage message) {
-            ExternalPaymentDto paymentDto = createPayment(message.getPayment());
+            ExternalPaymentDto paymentDto = createPaymentDto(message.getPayment());
             PaymentResponse paymentResponse = paymentsAdapter.createPayment(paymentDto);
-            System.out.println(paymentResponse.getPaymentInfo().getId());
             message.setPaymentResponse(paymentResponse);
     }
 
-    private ExternalPaymentDto createPayment(Payment payment) {
+    private ExternalPaymentDto createPaymentDto(Payment payment) {
         Optional<BankAccount> bankAccount = bankAccountRepository.findById(payment.getAccountId());
         Optional<Wallet> wallet = walletRepository.findById(payment.getWalletId());
 

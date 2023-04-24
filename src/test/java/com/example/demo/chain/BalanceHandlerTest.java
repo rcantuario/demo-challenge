@@ -1,6 +1,6 @@
 package com.example.demo.chain;
 
-import com.example.demo.client.adapter.WalletAdapter;
+import com.example.demo.client.adapter.BalanceAdapter;
 import com.example.demo.client.dto.Balance;
 import com.example.demo.client.dto.Payment;
 import com.example.demo.exception.InvalidBalanceException;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class BalanceHandlerTest {
     @Mock
-    private WalletAdapter walletAdapter;
+    private BalanceAdapter balanceAdapter;
 
     @Mock
     private TransactionRepository transactionRepository;
@@ -52,7 +52,7 @@ class BalanceHandlerTest {
         paymentMessage.setPayment(payment);
         paymentMessage.setTransaction(transaction);
 
-        Mockito.when(walletAdapter.getBalance()).thenReturn(this.balance);
+        Mockito.when(balanceAdapter.getBalance()).thenReturn(this.balance);
 
         assertThrows(InvalidBalanceException.class, () -> {
             handler.handle(paymentMessage);
@@ -70,7 +70,7 @@ class BalanceHandlerTest {
         paymentMessage.setPayment(payment);
         paymentMessage.setTransaction(transaction);
 
-        Mockito.when(walletAdapter.getBalance()).thenReturn(this.balance);
+        Mockito.when(balanceAdapter.getBalance()).thenReturn(this.balance);
         handler.handle(paymentMessage);
         verify(transactionRepository, times(1)).save(any(Transaction.class));
 
