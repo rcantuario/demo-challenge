@@ -1,49 +1,50 @@
-# demo-challenge
 
 
-Initially, I found 3 entities to be persisted on the database. But those entities will probably change
+# Ontop demo challenge
 
-Those entities are :
+## Table of contents
+* [General info](#general-info)
+* [Technologies](#technologies)
+* [Setup](#setup)
 
-* Bank Account
-First name
-last name
-rounting number
-national id number
-account number
+## General info
+This project is the implementation for ontop challenge.
 
-* Transaction Info
-currency
-transaction fee
-amount send
-amount recipient
+	
+## Technologies
+Project is created with:
+* JDK 8 or above
+* Spring boot 3.0.5
+* H2 database
 
-* Transaction
-Amount
-Currency
-Date
-Status (completed, refunded, failed, in progress)
+	
+## Setup
+To run this project, install it locally using Maven, once the jar is running you can access it through the url:
+
+localhost:8080/api/payments
+
+here is an example of the payload to create a new payment : 
+
+{
+  "accountId": 1,
+  "walletId": 1,
+  "amount": 4,
+  "currency": "USD"
+}
+
+The same url (localhost:8080/api/payments) can be used to retrieve a list of transactions, but you have to specify date and amount for filtering
+
+The file Renan challenge.postman_collection.json is a collection of requests to show the API usage and also some possible exceptions
+
+The database is available at http://localhost:8080/h2-console/  
+
+user :sa
+password : password
+
+During the application startup the class DataStartup inserts some registers on the database so it does not start empty.
 
 
 
-I started the project using spring webclient to invoke the external APIs but I'm not used to it, so after some time struggling with that, I changed to the old and gold rest template
 
-Here is a small description of the feature as per my understanding. If I had to share this with my team I would create a flow diagram to describe it.
-
-A feature é sacar o seu dinheiro da sua carteira e transferir para uma conta em um banco
-Para isso precisamos :
-
-The feature is withdraw money from your wallet and send it to a bank account
-In order to achieve it, we need :
-
-1 - Receive a payment request (payment dto)
-2 - Check Wallet balance
-3 - Call payment service to perform the payment
-4 - Discount / calc transaction fee
-5 - Update transaction status and wallet balance.
-
-
-We also want to be able to query the transactions ordered by descending “creation date” in a paginated table and
-filtered by amount and date.
 
 
