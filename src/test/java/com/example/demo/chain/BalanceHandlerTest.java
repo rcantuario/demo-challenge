@@ -46,7 +46,7 @@ class BalanceHandlerTest {
         Payment payment = mock(Payment.class);
         payment.setAmount(500000);
         Transaction transaction = new Transaction();
-        transaction.setAmount(500000d);
+        transaction.setAmountSent(500000d);
 
         PaymentMessage paymentMessage = new PaymentMessage();
         paymentMessage.setPayment(payment);
@@ -64,7 +64,7 @@ class BalanceHandlerTest {
         Payment payment = mock(Payment.class);
         payment.setAmount(1500);
         Transaction transaction = new Transaction();
-        transaction.setAmount(1500d);
+        transaction.setAmountSent(1500d);
 
         PaymentMessage paymentMessage = new PaymentMessage();
         paymentMessage.setPayment(payment);
